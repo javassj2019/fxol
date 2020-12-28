@@ -55,10 +55,10 @@ answerjson = '\[(.*)\]'
 today = str(datetime.date.today())
 ###开始登陆过程
 s = 0
-l = cur.execute('select UserID,UserPassword from User where Updata < (%s)', (today))
+l = cur.execute('select UserID,UserPassword from User where Updata < (%s) and Mark <> (%s)', (today,4))
 
 while s <= l:
-    cur.execute('select UserID,UserPassword from User where Updata < (%s)', (today))
+    cur.execute('select UserID,UserPassword from User where Updata < (%s) and Mark <> (%s)', (today,4))
     tt1 = cur.fetchone()
     print(tt1)
     userAccount = tt1['UserID']
