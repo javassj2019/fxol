@@ -87,18 +87,33 @@ while s <= l:
     print(username)
 
     # 开始考试
+    examid = str(2440)
+    paperid = str(4932)
+    series = str(430)
     t4 = requests.get(
-        http + host + '/ess/service/getpaper?paperId=4576&series=373_answer&version=2.5.5&userAccount' + userAccount,
+        http + host + '/ess/service/getpaper?paperId='+paperid+'&series='+series+'_answer&version=2.5.5&userAccount' + userAccount,
         headers=headers)
+    print(t4.text)
     t4answer = re.findall(answerjson, str(t4.content))[0]  # 此处返回text会因为返回有非json的数据不能读取
-    t5answer = t4answer.replace(',"score":"2.0",',',')
-    answer = urllib.parse.quote(t5answer)
-
+    t5answer = t4answer.replace(',"score":"1.0",',',')
+    t6answer = t5answer.replace(',"score":"2.0",',',')
+    t7answer = t6answer.replace(',"score":"3.0",',',')
+    t8answer = t7answer.replace('questionId":"','questionId":')
+    t9answer = t8answer.replace('","answerNo',',"answerNo')
+    answer = urllib.parse.quote(t9answer)
+    requests.post(
+        http + host + '/ess/service/myexam/myExamAo!doCommitExam.do',
+        headers = headers,
+        data='myPoint=300&examId='+examid+'&userAccount=' + userAccount + '&'
+    )
     t6 = requests.post(
         http + host + '/ess/service/myexam/myExamAo!doCommitExam.do',
         headers=headers,
-        data='domainCode=' + domainCode + '&series=373&userAccount='+userAccount+'&examId=2267&myExamAnswer=%5b' + answer + '%5d&paperId=4576&')
+        data='myExamAnswer=%5b' + answer + '%5D&userAccount=' +userAccount+'&domainCode='+ domainCode + '&examId='+examid+'&paperId='+paperid+'&series='+series+'&sid='+sid)
     #tkk = requests.post('http://mobile.faxuan.net/ess/service/myexam/myExamAo!doCommitExam.do',headers=headers,data='domainCode='+domainCode+'&series=43&userAccount='+userAccount+'&examId=2034&myExamAnswer=%5b%7b%22questionId%22%3a%22566846%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566833%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566851%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566840%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566828%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566842%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566830%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566838%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566836%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566829%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566834%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566854%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566843%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566848%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566835%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566827%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566832%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566831%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566852%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566844%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566826%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566847%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566839%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566837%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566841%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566853%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566850%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566855%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566845%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566849%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566934%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566916%22%22answerNo%22%3a%22ABD%22%7d%7b%22questionId%22%3a%22566925%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566921%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566922%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566928%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566920%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566930%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566918%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566924%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566919%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566931%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566923%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566933%22%22answerNo%22%3a%22BCD%22%7d%7b%22questionId%22%3a%22566932%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566927%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566926%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566935%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566917%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566929%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566977%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566970%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566968%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566974%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566978%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566971%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566964%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566975%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566976%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566969%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566966%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566967%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566973%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566965%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566972%22%22answerNo%22%3a%221%22%7d%5d&paperId=4409&')
+    data='myExamAnswer=%5b' + answer + '%5D&userAccount=' +userAccount+'&domainCode='+ domainCode + '&examId='+examid+'&paperId='+paperid+'&series='+series+'&sid='+sid
+    print(domainCode+'sid='+sid)
+    print(data)
     print(t6.text)
     cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (4, userAccount))
     conn.commit()
