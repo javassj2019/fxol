@@ -44,7 +44,7 @@ getdetailurl = '/useris/service/getdetail?userAccount='
 studyurl = '/sss/service/coursewareService!commitStudy.do?domainCode='
 code = '&code=2f56fe3477f774c4ece2b926070b6d0a'
 headers = {}
-headers['If-Modified-Since'] = 'Tue, 25 Dec 2018 01:33:10 GMT+00:00'
+headers['If-Modified-Since'] = 'Tue, 1 Jul 2021 01:33:10 GMT+00:00'
 headers['User-Agent'] = 'Dalvik/2.1.0 (Linux; U; Android 7.1.1; OPPO R9s Build/NMF26F)'
 headers['Host'] = 'mobile.faxuan.net'
 headers['Accept-Encoding'] = 'gizp,deflate'
@@ -95,25 +95,37 @@ while s <= l:
         headers=headers)
     print(t4.text)
     t4answer = re.findall(answerjson, str(t4.content))[0]  # 此处返回text会因为返回有非json的数据不能读取
-    t5answer = t4answer.replace(',"score":"1.0",',',')
-    t6answer = t5answer.replace(',"score":"2.0",',',')
-    t7answer = t6answer.replace(',"score":"3.0",',',')
-    t8answer = t7answer.replace('questionId":"','questionId":')
-    t9answer = t8answer.replace('","answerNo',',"answerNo')
-    answer = urllib.parse.quote(t9answer)
-    requests.post(
-        http + host + '/ess/service/myexam/myExamAo!doCommitExam.do',
-        headers = headers,
-        data='myPoint=300&examId='+examid+'&userAccount=' + userAccount + '&'
-    )
+
+    t4answer = t4answer.replace(',"score":"1.0",', ',')
+    t4answer = t4answer.replace(',"score":"2.0",', ',')
+    t4answer = t4answer.replace(',"score":"3.0",', ',')
+    t4answer = t4answer.replace('questionId":"', 'questionId":')
+    t4answer = t4answer.replace('","answerNo', ',"answerNo')
+    t4answer = t4answer.replace('},{', '}{')
+    t4answer = t4answer.replace('ABCD', 'A,B,C,D')
+    t4answer = t4answer.replace('ABC', 'A,B,C')
+    t4answer = t4answer.replace('ABD', 'A,B,D')
+    t4answer = t4answer.replace('ACD', 'A,C,D')
+    t4answer = t4answer.replace('BCD', 'B,C,D')
+    t4answer = t4answer.replace('AC', 'A,C')
+    t4answer = t4answer.replace('AD', 'A,D')
+    t4answer = t4answer.replace('BC', 'B,C')
+    t4answer = t4answer.replace('BD', 'B,D')
+    t4answer = t4answer.replace('CD', 'C,D')
+    answer = t4answer
+    data = {
+        'series': series,
+        'examId': examid,
+        'paperId': paperid,
+        'userAccount': userAccount,
+        'domainCode': domainCode,
+        'myExamAnswer': '[' + answer + ']'
+    }
     t6 = requests.post(
         http + host + '/ess/service/myexam/myExamAo!doCommitExam.do',
         headers=headers,
-        data='myExamAnswer=%5b' + answer + '%5D&userAccount=' +userAccount+'&domainCode='+ domainCode + '&examId='+examid+'&paperId='+paperid+'&series='+series+'&sid='+sid)
-    #tkk = requests.post('http://mobile.faxuan.net/ess/service/myexam/myExamAo!doCommitExam.do',headers=headers,data='domainCode='+domainCode+'&series=43&userAccount='+userAccount+'&examId=2034&myExamAnswer=%5b%7b%22questionId%22%3a%22566846%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566833%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566851%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566840%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566828%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566842%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566830%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566838%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566836%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566829%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566834%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566854%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566843%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566848%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566835%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566827%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566832%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566831%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566852%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566844%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566826%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566847%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566839%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566837%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566841%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566853%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566850%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566855%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566845%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566849%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566934%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566916%22%22answerNo%22%3a%22ABD%22%7d%7b%22questionId%22%3a%22566925%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566921%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566922%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566928%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566920%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566930%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566918%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566924%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566919%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566931%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566923%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566933%22%22answerNo%22%3a%22BCD%22%7d%7b%22questionId%22%3a%22566932%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566927%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566926%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566935%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566917%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566929%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566977%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566970%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566968%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566974%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566978%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566971%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566964%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566975%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566976%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566969%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566966%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566967%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566973%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566965%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566972%22%22answerNo%22%3a%221%22%7d%5d&paperId=4409&')
-    data='myExamAnswer=%5b' + answer + '%5D&userAccount=' +userAccount+'&domainCode='+ domainCode + '&examId='+examid+'&paperId='+paperid+'&series='+series+'&sid='+sid
-    print(domainCode+'sid='+sid)
-    print(data)
+        data=data
+    )
     print(t6.text)
     cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (4, userAccount))
     conn.commit()
