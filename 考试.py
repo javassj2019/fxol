@@ -93,7 +93,7 @@ while s <= l:
     t4 = requests.get(
         http + host + '/ess/service/getpaper?paperId='+paperid+'&series='+series+'_answer&version=2.5.5&userAccount' + userAccount,
         headers=headers)
-    print(t4.text)
+    # print(t4.text)
     t4answer = re.findall(answerjson, str(t4.content))[0]  # 此处返回text会因为返回有非json的数据不能读取
 
     t4answer = t4answer.replace(',"score":"1.0",', ',')
@@ -126,7 +126,7 @@ while s <= l:
         headers=headers,
         data=data
     )
-    print(t6.text)
+    # print(t6.text)
     cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (4, userAccount))
     conn.commit()
     print("学习过程结束")
