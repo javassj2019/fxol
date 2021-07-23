@@ -11,30 +11,30 @@ conn = pymysql.connect(host='cdb-kce5k8kq.bj.tencentcdb.com', user='root', passw
 cur = conn.cursor(pymysql.cursors.DictCursor)  # 生成游标
 
 
-# 录入新用户
-def Typeuserid():
-    print('请输入用户名：')
-    userAccount = input()
-    print('请输入密码：')
-    userPassword = input()
-    # 用户查重
-    checkuid = cur.execute('select UserID from User where UserID = (%s)', userAccount)
-    print(checkuid)
-    if checkuid == 0:
-        cur.execute('insert into User(UserID,UserPassword,TDpoint,Updata,Mark) VALUES (%s,%s,%s,%s,%s)', (userAccount, userPassword, 10,'2020-10-10',1))
-        conn.commit()
-        print('用户添加完成')
-    else:
-        print('用户已存在，无需再次添加')
-
-
-print('需要添加新用户吗？Yes')
-checktype = input()
-if checktype == 'Y':
-    i = 0
-    while i <= 100:
-        Typeuserid()
-        i = i + 1
+# # 录入新用户
+# def Typeuserid():
+#     print('请输入用户名：')
+#     userAccount = input()
+#     print('请输入密码：')
+#     userPassword = input()
+#     # 用户查重
+#     checkuid = cur.execute('select UserID from User where UserID = (%s)', userAccount)
+#     print(checkuid)
+#     if checkuid == 0:
+#         cur.execute('insert into User(UserID,UserPassword,TDpoint,Updata,Mark) VALUES (%s,%s,%s,%s,%s)', (userAccount, userPassword, 10,'2020-10-10',1))
+#         conn.commit()
+#         print('用户添加完成')
+#     else:
+#         print('用户已存在，无需再次添加')
+#
+#
+# print('需要添加新用户吗？Yes')
+# checktype = input()
+# if checktype == 'Y':
+#     i = 0
+#     while i <= 100:
+#         Typeuserid()
+#         i = i + 1
 
 ###基础数据
 http = 'http://'
@@ -54,12 +54,14 @@ answerjson = '\[(.*)\]'
 
 ####比较最后更新时间并写数据库
 today = str(datetime.date.today())
+
+
 ###开始登陆过程
 s = 0
-l = cur.execute('select UserID,UserPassword from User where Mark < (%s) AND TDpoint < (%s)', (3,150))
+l = cur.execute('select UserID,UserPassword from User where Mark = (%s)', (2))
 
 while s <= l:
-    cur.execute('select UserID,UserPassword from User where Mark < (%s) AND TDpoint < (%s)', (3,150))
+    cur.execute('select UserID,UserPassword from User where Mark = (%s)', (2))
     tt1 = cur.fetchone()
     print(tt1)
     userAccount = tt1['UserID']
@@ -107,12 +109,13 @@ while s <= l:
         http + host + '/sss/service/coursewareService!commitExercises.do?domainCode=' + domainCode + '&userAccount=' + userAccount + '&paperId=2790&series=21&myExamAnswer=[' + answer + ']&ssid=' + sid + '&validate=&type=2',
         headers=headers)
     tkk = requests.post('http://mobile.faxuan.net/ess/service/myexam/myExamAo!doCommitExam.do',headers=headers,data='domainCode='+domainCode+'&series=43&userAccount='+userAccount+'&examId=2034&myExamAnswer=%5b%7b%22questionId%22%3a%22566846%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566833%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566851%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566840%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566828%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566842%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566830%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566838%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566836%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566829%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566834%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566854%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566843%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566848%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566835%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566827%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566832%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566831%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566852%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566844%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566826%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566847%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566839%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566837%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566841%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566853%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566850%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566855%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566845%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566849%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566934%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566916%22%22answerNo%22%3a%22ABD%22%7d%7b%22questionId%22%3a%22566925%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566921%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566922%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566928%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566920%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566930%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566918%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566924%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566919%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566931%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566923%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566933%22%22answerNo%22%3a%22BCD%22%7d%7b%22questionId%22%3a%22566932%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566927%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566926%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566935%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566917%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566929%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566977%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566970%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566968%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566974%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566978%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566971%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566964%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566975%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566976%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566969%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566966%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566967%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566973%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566965%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566972%22%22answerNo%22%3a%221%22%7d%5d&paperId=4409&')
+    tkk = requests.post('http://mobile.faxuan.net/ess/service/myexam/myExamAo!doCommitExam.do',headers=headers,data='domainCode='+domainCode+'&series=43&userAccount='+userAccount+'&examId=2034&myExamAnswer=%5b%7b%22questionId%22%3a%22566846%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566833%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566851%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566840%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566828%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566842%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566830%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566838%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566836%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566829%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566834%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566854%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566843%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566848%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566835%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566827%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566832%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566831%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566852%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566844%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566826%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566847%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566839%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566837%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566841%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566853%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566850%22%22answerNo%22%3a%22A%22%7d%7b%22questionId%22%3a%22566855%22%22answerNo%22%3a%22B%22%7d%7b%22questionId%22%3a%22566845%22%22answerNo%22%3a%22D%22%7d%7b%22questionId%22%3a%22566849%22%22answerNo%22%3a%22C%22%7d%7b%22questionId%22%3a%22566934%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566916%22%22answerNo%22%3a%22ABD%22%7d%7b%22questionId%22%3a%22566925%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566921%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566922%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566928%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566920%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566930%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566918%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566924%22%22answerNo%22%3a%22AB%22%7d%7b%22questionId%22%3a%22566919%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566931%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566923%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566933%22%22answerNo%22%3a%22BCD%22%7d%7b%22questionId%22%3a%22566932%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566927%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566926%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566935%22%22answerNo%22%3a%22BC%22%7d%7b%22questionId%22%3a%22566917%22%22answerNo%22%3a%22ABC%22%7d%7b%22questionId%22%3a%22566929%22%22answerNo%22%3a%22ABCD%22%7d%7b%22questionId%22%3a%22566977%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566970%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566968%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566974%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566978%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566971%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566964%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566975%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566976%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566969%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566966%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566967%22%22answerNo%22%3a%220%22%7d%7b%22questionId%22%3a%22566973%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566965%22%22answerNo%22%3a%221%22%7d%7b%22questionId%22%3a%22566972%22%22answerNo%22%3a%221%22%7d%5d&paperId=4409&')
     #print(tkk.text)
     cur.execute('UPDATE User SET Name = (%s) WHERE UserID = (%s)', (username, userAccount))
     cur.execute('UPDATE User SET Tpoint = (%s) WHERE UserID = (%s)', (Tpoint, userAccount))
     cur.execute('UPDATE User SET TDpoint = (%s) WHERE UserID = (%s)', (TDpoint, userAccount))
     cur.execute('UPDATE User SET Updata = (%s) WHERE UserID = (%s)', (today, userAccount))
-    cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (2, userAccount))
+    cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (0, userAccount))
     conn.commit()
     print("学习过程结束")
     ##########这里还差学习执行过程
