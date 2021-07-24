@@ -121,9 +121,9 @@ while s <= l:
             cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (3, userAccount))
         else:
             if int(TDpoint) < 150:
-                cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (0, userAccount))
-            else:
                 cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (2, userAccount))
+            else:
+                cur.execute('UPDATE User SET Mark = (%s) WHERE UserID = (%s)', (0, userAccount))
         conn.commit()
         print("积分刷新结束")
     except TypeError:
